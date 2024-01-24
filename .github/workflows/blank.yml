@@ -1,0 +1,28 @@
+name: Deploy ARM Template
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy ARM Template
+      uses: azure/ARM@v2
+      with:
+        azureResourceManagerConnection: ${{ secrets.AZURE_CREDENTIALS }}
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: 'YourResourceGroupName'
+        template: './azuredeploy.json'
+        parameters: './azuredeploy.parameters.json'
